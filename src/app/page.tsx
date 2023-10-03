@@ -41,12 +41,13 @@ export default function Home() {
 
   const handleData = async () => {
     const isData = await getData();
+    const arr: any[] = [];
     if (isData.result && skills.length <= 0) {
       isData.result.forEach((doc: any) => {
-        skills.push(doc.data());
+        arr.push(doc.data());
       });
     }
-    console.log(skills);
+    setSkills(arr);
   };
 
   return (
