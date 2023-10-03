@@ -2,7 +2,7 @@
 import { getData } from "@/services/firebaseService";
 import { useEffect, useState } from "react";
 import "./style.css";
-import { Grid } from "@mui/material";
+import { Grid, Popover, Typography } from "@mui/material";
 export default function Home() {
   const [skills, setSkills] = useState<any[]>([]);
 
@@ -38,6 +38,24 @@ export default function Home() {
   useEffect(() => {
     handleData();
   }, []);
+
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [popOverData, setPopOverData] = useState<any>(null);
+
+  const handlePopoverOpen = (
+    event: React.MouseEvent<HTMLElement>,
+    data: any
+  ) => {
+    setPopOverData(data);
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setPopOverData(null);
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
 
   const handleData = async () => {
     const isData = await getData();
@@ -91,9 +109,40 @@ export default function Home() {
                 {skills.map((sk: any) => {
                   return (
                     <Grid key={sk.value} item xs={2}>
-                      <div className="card">
+                      <div
+                        className="card"
+                        aria-owns={open ? "mouse-over-popover" : undefined}
+                        aria-haspopup="true"
+                        onMouseEnter={(e) => {
+                          handlePopoverOpen(
+                            e,
+                            sk.description ? sk.description : sk.value
+                          );
+                        }}
+                        onMouseLeave={handlePopoverClose}
+                      >
                         <img className="img" src={sk.url} alt="img" />
                         <label>{sk.value}</label>
+                        <Popover
+                          id="mouse-over-popover"
+                          sx={{
+                            pointerEvents: "none",
+                          }}
+                          open={open}
+                          anchorEl={anchorEl}
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "left",
+                          }}
+                          transformOrigin={{
+                            vertical: "top",
+                            horizontal: "left",
+                          }}
+                          onClose={handlePopoverClose}
+                          disableRestoreFocus
+                        >
+                          <Typography sx={{ p: 1 }}>{popOverData}</Typography>
+                        </Popover>
                       </div>
                     </Grid>
                   );
