@@ -102,3 +102,7 @@
 .link {
   text-decoration: underline;
 }
+
+.inner-popover {
+  max-width: 14vw;
+}

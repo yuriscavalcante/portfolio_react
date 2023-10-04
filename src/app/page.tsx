@@ -141,7 +141,9 @@ export default function Home() {
                           onClose={handlePopoverClose}
                           disableRestoreFocus
                         >
+                          <div className="inner-popover">
                           <Typography sx={{ p: 1 }}>{popOverData}</Typography>
+                          </div>
                         </Popover>
                       </div>
                     </Grid>
